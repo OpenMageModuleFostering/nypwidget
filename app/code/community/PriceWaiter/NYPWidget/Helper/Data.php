@@ -17,12 +17,35 @@
  *
  */
 
+if (is_file(dirname(__FILE__).'/../../pwconfig.local.php')) {
+    include dirname(__FILE__).'/../../pwconfig.local.php';
+}
+
 class PriceWaiter_NYPWidget_Helper_Data extends Mage_Core_Helper_Abstract
 {
     private $_product = false;
     private $_testing = false;
     private $_buttonEnabled = null;
     private $_conversionToolsEnabled = null;
+
+    private $_widgetUrl = 'https://widget.pricewaiter.com';
+    private $_manageUrl = 'https://manage.pricewaiter.com';
+    private $_apiUrl = 'https://api.pricewaiter.com';
+
+    public function __construct()
+    {
+        if (!!defined('_PW_WIDGET_URL_')) {
+            $this->_widgetUrl = _PW_WIDGET_URL_;
+        }
+
+        if (!!defined('_PW_MANAGE_URL_')) {
+            $this->_manageUrl = _PW_MANAGE_URL_;
+        }
+
+        if (!!defined('_PW_API_URL_')) {
+            $this->_apiUrl = _PW_API_URL_;
+        }
+    }
 
     public function isTesting()
     {
@@ -151,28 +174,24 @@ class PriceWaiter_NYPWidget_Helper_Data extends Mage_Core_Helper_Abstract
     public function getButtonSettingsUrl()
     {
         $apiKey = Mage::getStoreConfig('pricewaiter/configuration/api_key');
-        $baseUrl = 'https://manage.pricewaiter.com';
-        if ($this->_testing) {
-            $baseUrl = 'https://manage-staging.pricewaiter.com';
-        }
 
-        return sprintf("%s/stores/%s/button", $baseUrl, $apiKey);
+        return sprintf("%s/stores/%s/button", $this->_manageUrl, $apiKey);
     }
 
     public function getWidgetUrl()
     {
         if ($this->isEnabledForStore()) {
-            return "https://widget.pricewaiter.com/script/"
+            return $this->_widgetUrl . '/script/'
                 . Mage::getStoreConfig('pricewaiter/configuration/api_key')
                 . ".js";
         }
 
-        return "https://widget.pricewaiter.com/nyp/script/widget.js";
+        return $this->_widgetUrl . '/nyp/script/widget.js';
     }
 
     public function getApiUrl()
     {
-        return "https://api.pricewaiter.com/1/order/verify?api_key="
+        return $this->_apiUrl . '/1/order/verify?api_key='
             . Mage::getStoreConfig('pricewaiter/configuration/api_key');
     }
 
@@ -362,5 +381,50 @@ class PriceWaiter_NYPWidget_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         return min($costs);
+    }
+
+    public function setHeaders()
+    {
+        $magentoEdition = 'Magento ' . Mage::getEdition();
+        $magentoVersion = Mage::getVersion();
+        $extensionVersion = Mage::getConfig()->getNode()->modules->PriceWaiter_NYPWidget->version;
+        Mage::app()->getResponse()->setHeader('X-Platform', $magentoEdition, true);
+        Mage::app()->getResponse()->setHeader('X-Platform-Version', $magentoVersion, true);
+        Mage::app()->getResponse()->setHeader('X-Platform-Extension-Version', $extensionVersion, true);
+
+        return true;
+    }
+
+    public function getCategoriesAsJSON($product)
+    {
+        $categorization = array();
+        $assignedCategories = $product->getCategoryCollection()
+            ->addAttributeToSelect('name');
+
+        $baseUrl = Mage::app()->getStore()->getBaseUrl();
+
+        // Find the path (parents) of each category, and add their information
+        // to the categorization array
+        foreach ($assignedCategories as $assignedCategory) {
+            $parentCategories = array();
+            $path = $assignedCategory->getPath();
+            $parentIds = explode('/', $path);
+            array_shift($parentIds); // We don't care about the root category
+
+            $categoryModel = Mage::getModel('catalog/category');
+            foreach($parentIds as $parentCategoryId) {
+                $parentCategory = $categoryModel->load($parentCategoryId);
+                $parentCategoryUrl = preg_replace('/^\//', '', $parentCategory->getUrlPath());
+
+                $parentCategories[] = array(
+                    'name' => $parentCategory->getName(),
+                    'url' => $baseUrl . '/' . $parentCategoryUrl
+                );
+            }
+
+            $categorization[] = $parentCategories;
+        }
+
+        return json_encode($categorization);
     }
 }
