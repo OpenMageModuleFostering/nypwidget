@@ -18,14 +18,15 @@
 
 (function() {
   document.observe('dom:loaded', function() {
-    var button, enableButton, fetchToken, pwSignup, scope, tokenInput;
+    var apiSecret, button, enableButton, fetchSecret, fetchToken, pwSignup, scope, tokenInput;
     if (typeof priceWaiterTokenURL === 'undefined') {
       return;
     }
     tokenInput = document.getElementById('pricewaiter_configuration_sign_up_token');
     button = document.getElementById('nypwidget_signup');
     scope = document.getElementById('store_switcher');
-    if (typeof button === 'undefined') {
+    apiSecret = document.getElementById('pricewaiter_configuration_api_secret');
+    if (typeof button === 'undefined' || button === null) {
       return;
     }
     fetchToken = function() {
@@ -37,6 +38,14 @@
         },
         onComplete: function() {
           enableButton();
+        }
+      });
+    };
+    fetchSecret = function() {
+      new Ajax.Request(priceWaiterSecretURL, {
+        method: 'post',
+        onSuccess: function(transport) {
+          apiSecret.value = transport.responseJSON.secret;
         }
       });
     };
@@ -55,6 +64,9 @@
       fetchToken();
     } else {
       enableButton();
+    }
+    if (apiSecret.value === '') {
+      return fetchSecret();
     }
   });
 
