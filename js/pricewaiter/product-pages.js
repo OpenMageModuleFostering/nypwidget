@@ -124,7 +124,7 @@
             }
             Event.observe(setting, 'change', function(event) {
               var optionValue;
-              PriceWaiter.setPrice(Number(spConfig.config.basePrice) + Number(spConfig.reloadPrice()));
+              PriceWaiter.setPrice((Number(spConfig.config.basePrice) || 0) + (Number(spConfig.reloadPrice()) || 0));
               optionValue = setting.value !== '' ? setting.options[setting.selectedIndex].innerHTML : void 0;
               if (optionValue === void 0) {
                 PriceWaiter.clearProductOption(optionName);
