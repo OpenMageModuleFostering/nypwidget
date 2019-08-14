@@ -194,6 +194,42 @@ class PriceWaiter_NYPWidget_Helper_Data extends Mage_Core_Helper_Abstract
         return $productPrice;
     }
 
+    private function safeGetAttributeText($product, $code) {
+        $value = $product->getData($code);
+
+        $resource = $product->getResource();
+        if (!$resource) {
+            return false;
+        }
+
+        $attr = $resource->getAttribute($code);
+        if (!$attr) {
+            return false;
+        }
+
+        $frontend = $attr->getFrontend();
+        if (!$frontend) {
+            return false;
+        }
+
+        return $frontend->getValue($product);
+    }
+
+    public function getProductBrand($product) {
+
+        // prefer brand, but fallback to manufacturer attribute
+        $brand = $product->getData('brand');
+
+        if (!$brand) {
+            $manufacturer = $this->safeGetAttributeText($product, 'manufacturer');
+            if ($manufacturer) {
+                $brand = $manufacturer;
+            }
+        }
+
+        return $brand;
+    }
+
     private function _getProduct()
     {
         if (!$this->_product) {
