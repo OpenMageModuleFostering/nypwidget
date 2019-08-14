@@ -18,17 +18,15 @@
 
 // Product types supported by the Name Your Price Widget
 $supportTypeIds = array('simple', 'configurable', 'grouped', 'bundle');
+
 $installer = $this;
 $installer->startSetup();
 
-// Remove the old attribute
-$installer->removeAttribute('catalog_product', 'nypwidget_enabled');
-
-// Add a new attribute to all prodcuts to toggle the Widget on/off
-$installer->addAttribute('catalog_product', 'nypwidget_disabled',
+// Add a new attribute to all products to toggle the Conversion Tools on/off
+$installer->addAttribute('catalog_product', 'nypwidget_ct_disabled',
     array(
         'group' => 'General',
-        'label' => 'Disable PriceWaiter Widget?',
+        'label' => 'Disable PriceWaiter Conversion Tools? (such as Exit Intent)',
         'type' => 'int',
         'input' => 'boolean',
         'default' => '0',
@@ -49,3 +47,8 @@ $installer->addAttribute('catalog_product', 'nypwidget_disabled',
         'apply_to' => $supportTypeIds,
     )
 );
+
+// Add an attribute to our nypwidget_category table to hold conversion tools information
+$installer->run("
+ALTER TABLE {$this->getTable('nypwidget_category')} ADD COLUMN `nypwidget_ct_enabled` tinyint(1) NOT NULL default '1' AFTER nypwidget_enabled;
+");

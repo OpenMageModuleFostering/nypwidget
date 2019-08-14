@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2013-2014 Price Waiter, LLC
+ * Copyright 2013-2015 Price Waiter, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,24 @@ class PriceWaiter_NYPWidget_Block_Category extends Mage_Adminhtml_Block_Template
         $this->setTemplate('pricewaiter/categorytab.phtml');
     }
 
-    public function getIsEnabled()
+    private function _getCategory()
     {
         $category = Mage::registry('category');
         $nypcategory = Mage::getModel('nypwidget/category')->loadByCategory($category, $category->getStore()->getId());
 
-        return $nypcategory->isActive(true);
+        return $nypcategory;
+    }
+
+    public function getIsEnabled()
+    {
+        $category = $this->_getCategory();
+        return $category->isActive(true);
+    }
+
+    public function getIsConversionToolsEnabled()
+    {
+        $category = $this->_getCategory();
+        return $category->isConversionToolsEnabled(true);
     }
 
     public function getTabLabel()

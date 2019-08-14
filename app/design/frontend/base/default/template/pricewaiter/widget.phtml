@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2013-2014 Price Waiter, LLC
+ * Copyright 2013-2015 Price Waiter, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,48 @@
     <?php
     $customCss = Mage::getStoreConfig('pricewaiter/appearance/display_custom_css');
     $helper = $this->_getHelper();
-    if ($helper->isEnabled()):
+
+    $brand = $_product->getData('brand');
+    $image = $_product->getImageUrl();
+    $currency = Mage::app()->getStore()->getCurrentCurrencyCode();
+    if ($_product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_GROUPED) {
+        $groupedInformation = $helper->getGroupedProductInfo();
+    } else {
+        $groupedInformation = '';
+    }
+    if ($helper->isEnabledForStore()):
         ?>
         <script type="text/javascript">
             //<![CDATA[
-            <?php echo $helper->getPriceWaiterOptions(); ?>
-            <?php echo $helper->getProductOptions(); ?>
+            <?php echo $groupedInformation; ?>
+            var PriceWaiterOptions = {
+                <?php if ($helper->isButtonEnabled()): ?>
+                enableButton: true,
+                <?php else: ?>
+                enableButton: false,
+                <?php endif; ?>
+                currency: '<?php echo $currency; ?>',
+                <?php if ($helper->isConversionToolsEnabled()): ?>
+                enableConversionTools: true,
+                <?php else: ?>
+                enableConversionTools: false,
+                <?php endif; ?>
+
+                product: {
+                <?php if ($brand): ?>
+                    brand: <?php json_encode($brand); ?>,
+                <?php endif; ?>
+                    sku: <?php echo json_encode($_product->getSku()); ?>,
+                    name: <?php echo json_encode($_product->getName()); ?>,
+                    price: <?php echo json_encode($helper->getProductPrice($_product)); ?>,
+                    <?php if ($image != ''): ?>
+                    image: <?php echo json_encode($image); ?>
+                    <?php endif; ?>
+                }
+            };
+
+            var PriceWaiterRegularPrice = '<?php echo (float) $_product->getPrice(); ?>';
+            var PriceWaiterProductType = '<?php echo $_product->getTypeId(); ?>';
             var PriceWaiterWidgetUrl = "<?php echo $helper->getWidgetUrl(); ?>";
             //]]>
         </script>
@@ -34,5 +70,21 @@
              style='display: block; clear: both; padding-top: 10px; <?php echo $customCss; ?>'>
             <span id="pricewaiter"></span>
         </div>
+    <?php endif; ?>
+    <?php if ($_product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE): ?>
+        <?php
+        $simples = Mage::getModel('catalog/product_type_configurable')->setProduct($_product)
+            ->getUsedProductCollection()
+            ->addAttributeToSelect('sku');
+
+        $idToSku = array();
+        foreach ($simples as $simple) {
+            $idToSku[$simple->getId()] = $simple->getSku();
+        } ?>
+        <?php if (count($idToSku) > 0): ?>
+        <script type="text/javascript">
+            var PriceWaiterIdToSkus = <?php echo json_encode($idToSku); ?>;
+        </script>
+        <?php endif; ?>
     <?php endif; ?>
 <?php endif; ?>

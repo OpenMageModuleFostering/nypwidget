@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright 2013-2015 Price Waiter, LLC
  *
@@ -16,20 +17,14 @@
  *
  */
 
-$this->startSetup();
-
-// Create a new "Processing - PriceWaiter" status for orders
-// that have been pulled from PriceWaiter back into Magento.
-// NOTE: This replaces "Pending - PriceWaiter"
-$this->run("
-    INSERT INTO  `{$this->getTable('sales/order_status')}` (
-        `status`, `label`
-    ) VALUES (
-        'pricewaiter_processing', 'Processing - PriceWaiter'
-    );
-    INSERT INTO  `{$this->getTable('sales/order_status_state')}` (
-        `status`, `state`, `is_default`
-    ) VALUES (
-        'pricewaiter_processing', 'processing', '0'
-    );
-");
+class PriceWaiter_NYPWidget_Block_Adminhtml_Link extends Varien_Data_Form_Element_Link implements Varien_Data_Form_Element_Renderer_Interface
+{
+    public function render(Varien_Data_Form_Element_Abstract $element)
+    {
+        $helper = Mage::helper('nypwidget');
+        $this->setData('href', $helper->getButtonSettingsUrl());
+        $this->setData('target', '_blank');
+        $this->setData('value', 'Customize the appearance of your widget on PriceWaiter.com');
+        return $this->toHtml();
+    }
+}

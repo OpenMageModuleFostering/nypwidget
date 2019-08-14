@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright 2013-2014 Price Waiter, LLC
+ * Copyright 2013-2015 Price Waiter, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,12 +35,14 @@ class PriceWaiter_NYPWidget_Model_Observer
     public function saveCategory(Varien_Event_Observer $observer)
     {
         $category = $observer->getEvent()->getCategory();
-        $enabled = $observer->getEvent()->getRequest()->getPost();
-        $enabled = $enabled['pricewaiter']['enabled'];
+        $postData = $observer->getEvent()->getRequest()->getPost();
+        $enabled = $postData['pricewaiter']['enabled'];
+        $ctEnabled = $postData['pricewaiter']['ct_enabled'];
 
         // Save the current setting, by category, and store
         $nypcategory = Mage::getModel('nypwidget/category')->loadByCategory($category, $category->getStore()->getId());
         $nypcategory->setData('nypwidget_enabled', $enabled);
+        $nypcategory->setData('nypwidget_ct_enabled', $ctEnabled);
         $nypcategory->save();
 
         return true;
