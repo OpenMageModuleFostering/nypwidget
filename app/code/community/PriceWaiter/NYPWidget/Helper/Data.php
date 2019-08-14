@@ -75,6 +75,8 @@ class PriceWaiter_NYPWidget_Helper_Data extends Mage_Core_Helper_Abstract
             $this->_conversionToolsEnabled = true;
         }
 
+        $product = $this->_getProduct();
+
         // Is the PriceWaiter widget enabled for this category
         $category = Mage::registry('current_category');
         if (is_object($category)) {
@@ -197,6 +199,11 @@ class PriceWaiter_NYPWidget_Helper_Data extends Mage_Core_Helper_Abstract
     private function safeGetAttributeText($product, $code) {
         $value = $product->getData($code);
 
+        // prevent Magento from rendering "No" when nothing is selected.
+        if (!$value) {
+            return false;
+        }
+
         $resource = $product->getResource();
         if (!$resource) {
             return false;
@@ -222,6 +229,14 @@ class PriceWaiter_NYPWidget_Helper_Data extends Mage_Core_Helper_Abstract
 
         if (!$brand) {
             $manufacturer = $this->safeGetAttributeText($product, 'manufacturer');
+            if ($manufacturer) {
+                $brand = $manufacturer;
+            }
+        }
+
+        // try looking up popular plugin for brand attribute
+        if (!$brand) {
+            $manufacturer = $this->safeGetAttributeText($product, 'c2c_brand');
             if ($manufacturer) {
                 $brand = $manufacturer;
             }
