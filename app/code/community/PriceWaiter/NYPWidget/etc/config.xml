@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- Copyright 2013 Price Waiter, LLC
+ Copyright 2013-2014 Price Waiter, LLC
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 
     <modules>
         <PriceWaiter_NYPWidget>
-            <version>1.2.9</version>
+            <version>1.3.0</version>
         </PriceWaiter_NYPWidget>
     </modules>
 
@@ -29,7 +29,7 @@
                 <resourceModel>nypwidget_mysql4</resourceModel>
             </nypwidget>
             <nypwidget_mysql4>
-            	<class>PriceWaiter_NYPWidget_Model_Mysql4</class>
+                <class>PriceWaiter_NYPWidget_Model_Mysql4</class>
                 <entities>
                     <category>
                         <table>nypwidget_category</table>
@@ -79,26 +79,26 @@
             </nypwidget_read>
         </resources>
         <events>
-        	<adminhtml_catalog_category_tabs>
-        		<observers>
-        			<adminhtml_catalog_category_tabs_pricewaiter>
-        				<type>model</type>
-        				<class>nypwidget/observer</class>
-        				<method>addTab</method>
-        				<args></args>
-        			</adminhtml_catalog_category_tabs_pricewaiter>
-        		</observers>
-        	</adminhtml_catalog_category_tabs>
-        	<catalog_category_prepare_save>
-        		<observers>
-        			<catalog_category_prepare_save_pricewaiter>
-        				<type>model</type>
-        				<class>nypwidget/observer</class>
-        				<method>saveCategory</method>
-        				<args></args>
-        			</catalog_category_prepare_save_pricewaiter>
-        		</observers>
-        	</catalog_category_prepare_save>
+            <adminhtml_catalog_category_tabs>
+                <observers>
+                    <adminhtml_catalog_category_tabs_pricewaiter>
+                        <type>model</type>
+                        <class>nypwidget/observer</class>
+                        <method>addTab</method>
+                        <args></args>
+                    </adminhtml_catalog_category_tabs_pricewaiter>
+                </observers>
+            </adminhtml_catalog_category_tabs>
+            <catalog_category_prepare_save>
+                <observers>
+                    <catalog_category_prepare_save_pricewaiter>
+                        <type>model</type>
+                        <class>nypwidget/observer</class>
+                        <method>saveCategory</method>
+                        <args></args>
+                    </catalog_category_prepare_save_pricewaiter>
+                </observers>
+            </catalog_category_prepare_save>
         </events>
     </global>
 
@@ -137,15 +137,19 @@
                 <enabled>0</enabled>
                 <log>1</log>
             </configuration>
+            <customer_groups>
+                <disable>0</disable>
+                <group_select>0</group_select>
+            </customer_groups>
             <appearance>
                 <display_size>1</display_size>
                 <display_color>5F82D4</display_color>
                 <display_hover_color>739DFF</display_hover_color>
-			</appearance>
-			<customer_interaction>
-				<send_welcome_email>0</send_welcome_email>
-				<send_new_order_email>0</send_new_order_email>
-			</customer_interaction>
+            </appearance>
+            <customer_interaction>
+                <send_welcome_email>0</send_welcome_email>
+                <send_new_order_email>0</send_new_order_email>
+            </customer_interaction>
             <categories>
                 <disable_by_category>1</disable_by_category>
             </categories>

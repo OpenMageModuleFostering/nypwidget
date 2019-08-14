@@ -1,6 +1,7 @@
 <?php
+
 /*
- * Copyright 2013 Price Waiter, LLC
+ * Copyright 2013-2014 Price Waiter, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +16,29 @@
  * limitations under the License.
  *
  */
+
 class PriceWaiter_NYPWidget_Model_Order extends Mage_Core_Model_Abstract
 {
-	public function _construct()
-	{
-		$this->_init('nypwidget/order', 'entity_id');
-	}
+    public function _construct()
+    {
+        $this->_init('nypwidget/order', 'entity_id');
+    }
 
-	public function loadByPriceWaiterId($pricewaiterId)
-	{
-		if (is_null($pricewaiterId)) {
-			return false;
-		}
+    public function loadByPriceWaiterId($pricewaiterId)
+    {
+        if (is_null($pricewaiterId)) {
+            return false;
+        }
 
-		$collection = Mage::getModel('nypwidget/order')
-			->getCollection()
-			->addFieldToFilter('pricewaiter_id', $pricewaiterId);
+        $collection = Mage::getModel('nypwidget/order')
+            ->getCollection()
+            ->addFieldToFilter('pricewaiter_id', $pricewaiterId);
 
-		if (count($collection)) {
-			$this->load($collection->getFirstItem()->getEntityId());
-		}
+        if (count($collection)) {
+            $this->load($collection->getFirstItem()->getEntityId());
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
 }

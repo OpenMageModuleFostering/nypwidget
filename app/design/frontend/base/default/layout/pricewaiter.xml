@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- Copyright 2013 Price Waiter, LLC
+ Copyright 2013-2014 Price Waiter, LLC
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -16,11 +16,13 @@
 -->
 <layout>
     <catalog_product_view>
-    	<reference name="head">
-    		<action method="addJs"><name>pricewaiter/product-pages.js</name></action>
-    	</reference>
+        <reference name="head">
+            <action method="addJs">
+                <name>pricewaiter/product-pages.js</name>
+            </action>
+        </reference>
         <reference name="product.info.addtocart">
-            <block type="nypwidget/widget" name="pricewaiter_widget" template="pricewaiter/widget.phtml" as="pricewaiter.widget" />
+            <block type="nypwidget/widget" name="pricewaiter_widget" template="pricewaiter/widget.phtml" as="pricewaiter.widget"/>
         </reference>
     </catalog_product_view>
 </layout>

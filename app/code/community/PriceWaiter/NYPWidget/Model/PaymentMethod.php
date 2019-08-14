@@ -1,6 +1,7 @@
 <?php
+
 /*
- * Copyright 2013 Price Waiter, LLC
+ * Copyright 2013-2014 Price Waiter, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +21,16 @@ class PriceWaiter_NYPWidget_Model_PaymentMethod extends Mage_Payment_Model_Metho
 {
     protected $_code = 'nypwidget';
 
-    protected $_isGateway               = false;
-    protected $_canOrder                = true;
-    protected $_canAuthorize            = false;
-    protected $_canCapture              = false;
-    protected $_canCapturePartial       = false;
-    protected $_canRefund               = false;
-    protected $_canVoid                 = true;
-    protected $_canUseInternal          = true;
-    protected $_canUseCheckout          = false;
-    protected $_canUseForMultishipping  = false;
+    protected $_isGateway = false;
+    protected $_canOrder = true;
+    protected $_canAuthorize = false;
+    protected $_canCapture = false;
+    protected $_canCapturePartial = false;
+    protected $_canRefund = false;
+    protected $_canVoid = true;
+    protected $_canUseInternal = true;
+    protected $_canUseCheckout = false;
+    protected $_canUseForMultishipping = false;
 
     public function authorize(Varien_Object $payment, $amount)
     {
@@ -44,10 +45,10 @@ class PriceWaiter_NYPWidget_Model_PaymentMethod extends Mage_Payment_Model_Metho
     public function void(Varien_Object $payment)
     {
         return $this;
-	}
+    }
 
-	public function isAvailable($quote = null)
-	{
-		return false;
-	}
+    public function isAvailable($quote = null)
+    {
+        return false;
+    }
 }
