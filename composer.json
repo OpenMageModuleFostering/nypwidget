@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/nypwidget",
+    "name": "OpenMageModuleFostering\/nypwidget",
     "type": "magento-module",
     "license": "Apache-License,-Version-2.0",
     "homepage": "",
     "description": "PriceWaiter lets buyers make offers on your products that you can easily accept, counter offer or reject.",
     "authors": [
-    {
-        "name": "PriceWaiter",
-        "email": "extensions@pricewaiter.com"
-    }
-],
+        {
+            "name": "PriceWaiter",
+            "email": "extensions@pricewaiter.com"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
